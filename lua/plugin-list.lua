@@ -16,5 +16,6 @@ return {
     "captbaritone/better-indent-support-for-php-with-html",
     "windwp/nvim-autopairs",
     "christoomey/vim-tmux-navigator",
-    "akinsho/toggleterm.nvim"
+    "akinsho/toggleterm.nvim",
+    "MeanderingProgrammer/render-markdown.nvim"
 }
