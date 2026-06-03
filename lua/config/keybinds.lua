@@ -20,8 +20,8 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("i", "<C-c>", "<Esc>")
 
 -- add binds for Control J/K to scroll thru quickfix list
-vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+-- vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+-- vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 
 -- What the heck is Ex mode?
 vim.keymap.set("n", "Q", "<nop>")
@@ -62,3 +62,9 @@ vim.keymap.set("n", "<leader>mm", "<cmd>make<CR>")
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+
+-- Navigate vim panes better
+vim.keymap.set("n", "<C-k>", ":windcmd k<CR>")
+vim.keymap.set("n", "<C-j>", ":windcmd j<CR>")
+vim.keymap.set("n", "<C-h>", ":windcmd h<CR>")
+vim.keymap.set("n", "<C-l>", ":windcmd l<CR>")
