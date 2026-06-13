@@ -17,5 +17,6 @@ return {
     "windwp/nvim-autopairs",
     "christoomey/vim-tmux-navigator",
     "akinsho/toggleterm.nvim",
-    "MeanderingProgrammer/render-markdown.nvim"
+    "MeanderingProgrammer/render-markdown.nvim",
+    "manuuurino/autoread.nvim"
 }
