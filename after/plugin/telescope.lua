@@ -1,3 +1,21 @@
+-- Telescope fuzzy-finder configuration and keybindings.
+--
+-- Inside any Telescope picker:
+--   <C-j> / <C-k>  move selection down / up
+--   <C-q>          send all results to the quickfix list and open it
+--
+-- Normal-mode pickers (all prefixed with <leader>f):
+--   <leader>ff   find files under cwd
+--   <leader>fo   recently opened files
+--   <leader>fq   browse the quickfix list
+--   <leader>fh   search :help tags
+--   <leader>fm   search man pages (all sections)
+--   <leader>fb   list open buffers
+--   <leader>fg   grep for a string (prompts for input)
+--   <leader>fc   grep for the current filename (without extension) across the project
+--   <leader>fs   grep for the word currently under the cursor
+--   <leader>fi   find files inside ~/.config/nvim/
+
 local actions = require("telescope.actions")
 require("telescope").setup({
     defaults = {
@@ -23,6 +41,8 @@ vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" 
 vim.keymap.set("n", "<leader>fg", function()
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
+-- Grep for the current filename (stem only) — useful for finding all references
+-- to a class or module that shares its name with the file.
 vim.keymap.set("n", "<leader>fc", function()
     builtin.grep_string({ search = vim.fn.expand("%:t:r") })
 end, { desc = "Find current file" })

@@ -1,16 +1,16 @@
--- Default configuration
+-- Configures autoread.nvim to poll for external file changes every 500 ms
+-- and notify when a buffer is reloaded. Useful when files are modified by
+-- build tools, formatters, or other processes while Neovim is open.
 require("autoread").setup({
-    -- Check interval in milliseconds
-    interval = 500,
-    -- Show notifications when files change
-    notify_on_change = true,
-    -- How to handle cursor position after reload: "preserve", "scroll_down", or "none"
+    interval = 500,           -- polling interval in milliseconds
+    notify_on_change = true,  -- show a notification when a buffer is reloaded
+    -- "preserve" keeps the cursor where it was; alternatives: "scroll_down", "none"
     cursor_behavior = "preserve",
 })
 
--- Auto-enable autoread for all buffers at startup
+-- Enable autoread for all buffers as soon as the UI is ready.
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    vim.cmd("AutoreadOn 500")  -- or just "AutoreadOn"
+    vim.cmd("AutoreadOn 500")
   end,
 })

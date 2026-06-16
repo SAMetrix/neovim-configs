@@ -1,23 +1,32 @@
--- Local treesitter setup. Replaces nvim-treesitter + nvim-treesitter-textobjects.
--- Parsers: ~/.config/nvim/parser/<lang>.so
--- Queries: ~/.config/nvim/queries/<lang>/
+-- Tonysitter: local Treesitter setup.
+-- Replaces nvim-treesitter and nvim-treesitter-textobjects with a minimal
+-- implementation that uses Neovim's built-in treesitter API directly.
+--
+-- Parsers:  ~/.local/share/nvim/site/parser/<lang>.so  (also parser.old/ here)
+-- Queries:  ~/.config/nvim/queries/<lang>/
+--
+-- Text object keybindings (Visual and Operator-pending modes):
+--   af   select around the enclosing function (function.outer)
+--   if   select inside the enclosing function (function.inner)
 
--- Start treesitter highlighting on FileType when a parser is available.
+-- Start treesitter highlighting for a buffer's filetype whenever a parser is
+-- available. pcall suppresses the error for filetypes without a parser.
 vim.api.nvim_create_autocmd("FileType", {
     callback = function(args)
         pcall(vim.treesitter.start, args.buf)
     end,
 })
 
--- Function text objects: af / if
--- Walks the textobjects query for the buffer's language and selects the
--- smallest @function.outer / @function.inner range containing the cursor.
+-- Select the smallest function node containing the cursor.
+-- `capture` is either "function.outer" or "function.inner".
+-- Uses iter_matches to union all capture nodes within each match, which handles
+-- queries that split a single textobject across several capture IDs.
 local function select_function(capture)
-    local bufnr = vim.api.nvim_get_current_buf()
+    local bufnr    = vim.api.nvim_get_current_buf()
     local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
     if not ok or not parser then return end
 
-    local lang = parser:lang()
+    local lang  = parser:lang()
     local query = vim.treesitter.query.get(lang, "textobjects")
     if not query then return end
 
@@ -25,13 +34,9 @@ local function select_function(capture)
     if not tree then return end
     local root = tree:root()
 
-    local cur = vim.api.nvim_win_get_cursor(0)
+    local cur       = vim.api.nvim_win_get_cursor(0)
     local crow, ccol = cur[1] - 1, cur[2]
 
-    -- A single textobject (e.g. @function.inner) is often split across
-    -- multiple captures within the same match (e.g. one per statement in
-    -- the body). Use iter_matches and union the ranges of all captures
-    -- with our target name within each match.
     local best, best_size
     for _, match in query:iter_matches(root, bufnr, 0, -1, { all = true }) do
         local min_sr, min_sc, max_er, max_ec
@@ -65,9 +70,8 @@ local function select_function(capture)
     if not best then return end
     local sr, sc, er, ec = best[1], best[2], best[3], best[4]
 
-    -- If we were invoked from visual mode (`vif`, `vaf`, etc.), exit it
-    -- first — otherwise `normal! v` below would toggle visual off instead
-    -- of re-entering it, and we'd end up only moving the cursor.
+    -- Exit visual mode first if already in it; otherwise `normal! v` below
+    -- would toggle visual off rather than re-entering it.
     local mode = vim.fn.mode()
     if mode == "v" or mode == "V" or mode == "\22" then
         vim.api.nvim_feedkeys(
