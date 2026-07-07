@@ -12,6 +12,11 @@ set.shiftwidth = 4
 set.autoindent = true
 set.expandtab = true
 
+-- Word Wrap
+set.wrap = true          -- enable wrapping
+set.linebreak = true     -- wrap at word boundaries
+set.showbreak = "↪ "     -- indicator at wrapped lines
+
 -- Case-insensitive search unless the pattern contains an uppercase letter.
 set.ignorecase = true
 set.smartcase = true

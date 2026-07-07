@@ -23,5 +23,6 @@ return {
     "akinsho/toggleterm.nvim",         -- managed terminal windows with a language runner
     "MeanderingProgrammer/render-markdown.nvim", -- rendered markdown preview inside nvim
     "manuuurino/autoread.nvim",        -- auto-reload buffers when files change on disk
-    "mikavilpas/yazi.nvim"             -- yazi file manager integration
+    "mikavilpas/yazi.nvim",             -- yazi file manager integration
+    "chomosuke/typst-preview.nvim"     -- typst-preview integration
 }

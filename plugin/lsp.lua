@@ -303,6 +303,17 @@ vim.lsp.config['templ'] = {
     capabilities = caps,
 }
 
+vim.lsp.config["tinymist"] = {
+    cmd = { "tinymist" },
+    filetypes = { "typst" },
+    settings = {
+        formatterMode = "typstyle", -- or "typstfmt"
+        formatterProseWrap = true, -- wrap lines in content mode
+        -- formatterPrintWidth = 80,  -- limit line length to 80 if possible
+        formatterIndentSize = 4,   -- indentation width
+    }
+}
+
 -- Register custom file extensions so Neovim picks the right filetype (and LSP).
 vim.filetype.add({
     extension = {
