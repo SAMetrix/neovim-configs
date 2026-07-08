@@ -164,6 +164,7 @@ vim.lsp.config['pyls'] = {
     cmd          = { "pyright-langserver", "--stdio" },
     filetypes    = { "python" },
     root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
+    capabilities = caps,
     settings     = {
         python = {
             analysis = {
@@ -264,7 +265,7 @@ vim.lsp.config['serve_d'] = {
 }
 
 vim.lsp.config['jsonls'] = {
-    cmd          = { 'vscode-json-languageserver', '--stdio' },
+    cmd          = { 'vscode-json-language-server', '--stdio' },
     filetypes    = { 'json', 'jsonc' },
     root_markers = { 'package.json', '.git', 'config.jsonc' },
     capabilities = caps,

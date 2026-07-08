@@ -35,6 +35,7 @@ No mason — LSP servers are installed manually and configured via the native `v
 │   │   ├── telescope.lua      # Telescope fuzzy-finder keybindings
 │   │   ├── toggleterm.lua     # Floating terminal + language runner (<leader>rt)
 │   │   ├── treesitter.lua     # Filetype mappings (goon extension)
+│   │   ├── typst-preview.lua  # Typst live preview + watch pane (<leader>tw)
 │   │   └── yazi.lua           # Yazi file manager integration
 │   └── ftplugin/              # Per-filetype overrides
 │       ├── goon.lua           # Goon: C-style comments
@@ -74,6 +75,7 @@ No mason — LSP servers are installed manually and configured via the native `v
 | `MeanderingProgrammer/render-markdown.nvim` | Rendered Markdown preview inside nvim |
 | `manuuurino/autoread.nvim` | Auto-reload buffers when files change on disk |
 | `mikavilpas/yazi.nvim` | Yazi file manager floating window |
+| `chomosuke/typst-preview.nvim` | Live Typst preview in browser (`:TypstPreview`) |
 
 ---
 
@@ -171,6 +173,14 @@ No mason — LSP servers are installed manually and configured via the native `v
 
 The `<leader>rt` runner supports: `python` (uv), `javascript` (node), `typescript` (ts-node), `c` (gcc), `cpp` (clang++), `rust` (cargo run), `go` (go run).
 
+### Typst
+
+| Mode | Key | Action |
+|---|---|---|
+| `n` | `<leader>tw` | Toggle a vertical `typst watch` pane (live compile errors on save) |
+
+`typst-preview.nvim` also provides `:TypstPreview` (live browser preview), `:TypstPreviewToggle`, and `:TypstPreviewStop`. First run requires `:TypstPreviewUpdate` to fetch its bundled `tinymist`/`websocat` binaries.
+
 ### Yazi (File Manager — inside the Yazi window)
 
 | Key | Action |
@@ -260,9 +270,10 @@ Servers are declared in `plugin/lsp.lua` using `vim.lsp.config` (Neovim 0.11+) a
 | `clangd` | C, C++, ObjC | `pacman -S clang` / brew |
 | `c3-lsp` | C3 | build from source |
 | `serve-d` | D | `pacman -S serve-d` |
-| `vscode-json-languageserver` | JSON, JSONC | `npm i -g vscode-langservers-extracted` |
+| `vscode-json-language-server` | JSON, JSONC | `npm i -g vscode-langservers-extracted` |
 | `haskell-language-server-wrapper` | Haskell | `ghcup install hls` |
 | `gopls` | Go, gomod, templ | `go install golang.org/x/tools/gopls@latest` |
 | `templ` | Templ | `go install github.com/a-h/templ/cmd/templ@latest` |
+| `tinymist` | Typst | `cargo install tinymist` / brew |
 
 Auto-formatting on save is enabled for all servers that support it, **except** PHP (use `<leader>cc` for php-cs-fixer) and C/C++ (use clang-format manually or via `<F3>`).
