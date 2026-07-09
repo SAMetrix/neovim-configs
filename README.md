@@ -30,6 +30,7 @@ No mason — LSP servers are installed manually and configured via the native `v
 │   │   ├── colors.lua         # Colorscheme + transparent background overrides
 │   │   ├── completion.lua     # nvim-cmp completion setup
 │   │   ├── harpoon.lua        # Harpoon v2 file bookmark keybindings
+│   │   ├── indent-blankline.lua  # Indent guides (rainbow scope highlight)
 │   │   ├── nvim-tmux-navigator.lua  # Ctrl-H/J/K/L tmux pane navigation
 │   │   ├── one-liners.lua     # lualine, highlight-colors, autopairs setup
 │   │   ├── telescope.lua      # Telescope fuzzy-finder keybindings
@@ -76,6 +77,7 @@ No mason — LSP servers are installed manually and configured via the native `v
 | `manuuurino/autoread.nvim` | Auto-reload buffers when files change on disk |
 | `mikavilpas/yazi.nvim` | Yazi file manager floating window |
 | `chomosuke/typst-preview.nvim` | Live Typst preview in browser (`:TypstPreview`) |
+| `lukas-reineke/indent-blankline.nvim` | Indent guides with rainbow scope highlighting |
 
 ---
 
