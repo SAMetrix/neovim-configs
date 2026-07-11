@@ -12,10 +12,13 @@
 #   fd              (telescope find_files)
 #   yazi            (file manager; required by mikavilpas/yazi.nvim)
 #
-# LSP servers are NOT installed by this script because they are
-# language-specific. Install whichever ones you need separately.
-# See plugin/lsp.lua for the full list with server names and
-# the commands they expect on $PATH.
+# The npm-based LSP servers actually wired up in plugin/lsp.lua
+# (pyright, typescript-language-server, vscode-langservers-extracted,
+# intelephense) ARE installed by this script, via install_npm_lsp_servers.
+# All other servers are language/toolchain-specific and NOT installed;
+# install whichever of those you need separately. See plugin/lsp.lua
+# for the full list with server names and the commands they expect on
+# $PATH.
 #
 # A Nerd Font must be installed and configured in your terminal
 # emulator for nvim-web-devicons icons to render correctly.
@@ -41,6 +44,36 @@ gh_latest_version() {
     # Usage: gh_latest_version owner/repo
     curl -s "https://api.github.com/repos/$1/releases/latest" \
         | grep -Po '"tag_name": *"v\K[^"]*'
+}
+
+install_npm_lsp_servers() {
+    # Point npm's global prefix at a user-writable directory so `npm install -g`
+    # never needs sudo (and doesn't dump files into the system node install).
+    local npm_global="$HOME/.npm-global"
+    mkdir -p "$npm_global"
+    npm config set prefix "$npm_global"
+
+    # Make the prefix's bin dir available for the rest of this script run.
+    export PATH="$npm_global/bin:$PATH"
+
+    # Persist it for future shells, idempotently.
+    local path_line="export PATH=\"$npm_global/bin:\$PATH\""
+    local rc_file="$HOME/.zshrc"
+    [[ "$SHELL" == */bash ]] && rc_file="$HOME/.bashrc"
+    if ! grep -qF "$path_line" "$rc_file" 2>/dev/null; then
+        echo "" >> "$rc_file"
+        echo "# Added by nvim install.sh: npm global packages" >> "$rc_file"
+        echo "$path_line" >> "$rc_file"
+        echo "Added npm-global PATH export to $rc_file"
+    fi
+
+    echo "Installing npm-based LSP servers..."
+    npm install -g \
+        pyright \
+        typescript-language-server \
+        typescript \
+        vscode-langservers-extracted \
+        intelephense
 }
 
 # ── Linux dependency installation ─────────────────────────
@@ -86,7 +119,7 @@ install_yazi_linux() {
 if [[ "$OS" == "Linux" ]]; then
     echo "Installing base packages via apt..."
     sudo apt update
-    sudo apt install -y git curl ripgrep fd-find rsync unzip
+    sudo apt install -y git curl ripgrep fd-find rsync unzip nodejs npm
 
     # On Debian/Ubuntu, fd ships as fdfind; create a symlink so telescope finds it.
     if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
@@ -115,12 +148,16 @@ elif [[ "$OS" == "Darwin" ]]; then
     fi
 
     brew update
-    brew install neovim git ripgrep fd yazi
+    brew install neovim git ripgrep fd yazi node
 
 else
     echo "Unsupported OS: $OS"
     exit 1
 fi
+
+# ── Install npm-based LSP servers ─────────────────────────
+
+install_npm_lsp_servers
 
 # ── Backup existing Neovim config ─────────────────────────
 
@@ -155,10 +192,10 @@ echo "  1. Launch Neovim — plugins are auto-cloned to ~/.local/share/nvim/plug
 echo "     on first startup. Wait for the initial clone pass to finish."
 echo "  2. Install a Nerd Font and set it in your terminal emulator."
 echo "     See: https://www.nerdfonts.com"
-echo "  3. Install LSP servers for the languages you use. Examples:"
+echo "  3. pyright, typescript-language-server, intelephense, and the"
+echo "     vscode html/css/json servers were installed via npm. Install"
+echo "     LSP servers for any other languages you use. Examples:"
 echo "       Lua:        brew install lua-language-server  (macOS)"
 echo "                   sudo apt install lua-language-server  (Linux)"
-echo "       TypeScript: npm install -g typescript-language-server typescript"
 echo "       Go:         go install golang.org/x/tools/gopls@latest"
-echo "       Python:     pip install pyright"
 echo "     See plugin/lsp.lua for the full server list."
